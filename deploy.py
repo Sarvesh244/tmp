@@ -214,7 +214,7 @@ if "chat_history" not in st.session_state:
     ]
 
 # Use only a single emoji character so it fits beautifully into the 60x60 circular button
-with st.popover("💬"):
+with st.popover("Chat with AI💬"):
     st.markdown("### 🤖 GenAI Concierge")
     chat_container = st.container(height=350)
     
