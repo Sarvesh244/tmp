@@ -146,25 +146,22 @@ with tab_bi:
     st.info("Embed Power BI iframe here.")
 
 
-# --- 6. FLOATING GEMINI AI CHATBOT (Using st.popover) ---
+# --- FLOATING GEMINI AI CHATBOT ---
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = [
         {"role": "assistant", "content": "Hi! I am the LuxeStay AI. How can I assist you with pricing or bookings today?"}
     ]
 
-# The popover creates a button that opens a mini-window when clicked.
-# Because of our CSS above, this button is pinned to the bottom right!
+# This popover button will be forced to the bottom right by the CSS above
 with st.popover("💬 Chat with AI"):
     st.markdown("### 🤖 GenAI Concierge")
     
-    # Scrollable container for chat history
     chat_container = st.container(height=350)
     with chat_container:
         for message in st.session_state.chat_history:
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
                 
-    # Input form (Streamlit doesn't allow st.chat_input inside popovers, so we use a form)
     with st.form("chat_form", clear_on_submit=True):
         col1, col2 = st.columns([4, 1])
         with col1:
@@ -173,19 +170,13 @@ with st.popover("💬 Chat with AI"):
             submitted = st.form_submit_button("Send", type="primary", use_container_width=True)
             
     if submitted and user_input:
-        # 1. Append user message to UI
         st.session_state.chat_history.append({"role": "user", "content": user_input})
         
-        # 2. Call Gemini API
         try:
-            # We pass the prompt directly to Gemini
             response = model.generate_content(user_input)
             bot_reply = response.text
         except Exception as e:
-            bot_reply = f"API Error: Please check your API key or model name. Details: {e}"
+            bot_reply = f"API Error: Please check your configuration. Details: {e}"
             
-        # 3. Append bot response to UI
         st.session_state.chat_history.append({"role": "assistant", "content": bot_reply})
-        
-        # 4. Rerun app to instantly show new messages
         st.rerun()
