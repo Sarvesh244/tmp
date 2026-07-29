@@ -70,13 +70,12 @@ footer {visibility: hidden;}
     text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
 }
 
-/* 🚨 REFIXED MAGIC CSS: Forces the popover trigger button to be a tiny, floating circle */
-/* 🚨 FIXED FLOATING POPOVER: Anchors the chat button precisely at the bottom right */
+/* 🚨 FIXED FLOATING POPOVER: Anchors the capsule button precisely at the bottom right */
 div[data-testid="stPopover"] {
     position: fixed !important;
     bottom: 30px !important;
     right: 30px !important;
-    left: auto !important; /* Prevents stretching to the left on narrow screens */
+    left: auto !important; 
     top: auto !important;
     z-index: 999999 !important;
     width: auto !important;
@@ -88,73 +87,56 @@ div[data-testid="stPopover"] > div:first-child {
     justify-content: flex-end !important;
 }
 
-/* Target the exact inner button element to force a small circular shape */
+/* Target the inner button element to force a clean capsule pill shape */
 div[data-testid="stPopover"] button {
     background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%) !important;
     color: white !important;
-    border-radius: 50% !important; 
-    width: 60px !important;       
-    height: 60px !important;      
-    min-width: 60px !important;   /* Prevents distortion */
-    max-width: 60px !important;   
-    padding: 0 !important;         
+    border-radius: 30px !important; /* Creates smooth rounded capsule edges */
+    height: 50px !important;       /* Comfortable standard button height */
+    width: auto !important;        /* Let it automatically size to your text width */
+    min-width: 150px !important;   /* Sets a clean minimum baseline width */
+    max-width: 220px !important;   /* Prevents it from pulling too wide */
+    padding: 0px 20px !important;  /* Generates inner padding for text breathing room */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     border: none !important;
     box-shadow: 0 8px 16px rgba(0,0,0,0.3) !important;
-    font-size: 24px !important;   
     transition: transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 
+/* Format the markdown container inside the button so the text stays on one line */
+div[data-testid="stPopover"] button div[data-testid="stMarkdownContainer"] p {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important; /* 🚨 CRITICAL: Prevents text from breaking or wrapping into rows */
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;            /* Adds spacing between the emoji and the text words */
+}
+
+/* Completely hide the default Streamlit down-arrow chevron */
+div[data-testid="stPopover"] button svg {
+    display: none !important;
+}
+
 div[data-testid="stPopover"] button:hover {
-    transform: translateY(-5px) scale(1.05) !important;
+    transform: translateY(-5px) scale(1.02) !important;
     box-shadow: 0 12px 20px rgba(0,0,0,0.4) !important;
 }
 
-/* Forces the chat text window to open aligned neatly right over the button */
+/* Forces the chat text window to open aligned neatly right over the capsule button */
 div[data-testid="stPopoverWindow"] {
     position: fixed !important;
-    bottom: 100px !important;
+    bottom: 95px !important;
     right: 30px !important;
     left: auto !important;
     top: auto !important;
     max-width: 350px !important;
 }
 
-
-/* Style the button container to maintain alignment */
-div[data-testid="stPopover"] > div:first-child {
-    display: block !important;
-}
-
-/* Target the exact inner button element */
-div[data-testid="stPopover"] button {
-    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%) !important;
-    color: white !important;
-    border-radius: 50% !important; /* Makes it a circle */
-    width: 60px !important;       /* Explicit compact size */
-    height: 60px !important;      /* Explicit compact size */
-    padding: 0 !important;         /* Reset padding */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: none !important;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3) !important;
-    font-size: 24px !important;   /* Increase emoji size inside */
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-}
-
-div[data-testid="stPopover"] button:hover {
-    transform: translateY(-5px) scale(1.05) !important;
-    box-shadow: 0 12px 20px rgba(0,0,0,0.4) !important;
-}
-
-/* Adjust position of the opened overlay window to match the button */
-div[data-testid="stPopoverWindow"] {
-    bottom: 100px !important;
-    right: 30px !important;
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -214,7 +196,7 @@ if "chat_history" not in st.session_state:
     ]
 
 # Use only a single emoji character so it fits beautifully into the 60x60 circular button
-with st.popover("Chat with AI💬"):
+with st.popover(" Chat with AI 💬  "):
     st.markdown("### 🤖 GenAI Concierge")
     chat_container = st.container(height=350)
     
