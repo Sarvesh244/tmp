@@ -10,7 +10,7 @@ import google.generativeai as genai
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=GEMINI_API_KEY)
 # Using the specific model version you requested
-model = genai.GenerativeModel('gemini-flash-lite-3.6') 
+model = genai.GenerativeModel('gemini-3.6-flash') 
 
 # --- 2. PAGE CONFIGURATION ---
 st.set_page_config(
