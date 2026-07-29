@@ -22,80 +22,96 @@ st.set_page_config(
 
 # --- 3. ADVANCED CSS (Gradient, Navbar, and Floating Popover Chat) ---
 st.markdown("""
-    <style>
-        /* Hide default Streamlit elements */
-        header {visibility: hidden;}
-        footer {visibility: hidden;}
-        .stDeployButton {display:none;}
-        
-        /* Apply a luxury gradient background */
-        .stApp {
-            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
-        }
-        
-        /* Remove top padding */
-        .block-container {
-            padding-top: 1rem;
-            padding-bottom: 0rem;
-        }
-        
-        /* Style the tabs to look like a modern navigation bar */
-        .stTabs [data-baseweb="tab-list"] {
-            gap: 20px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(0,0,0,0.1);
-        }
-        .stTabs [data-baseweb="tab"] {
-            height: 50px;
-            border-radius: 8px;
-            padding: 0 25px;
-            background-color: transparent;
-            font-weight: 700;
-            color: #4a4a4a;
-            transition: all 0.3s ease;
-        }
-        .stTabs [aria-selected="true"] {
-            background-color: #2c3e50 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        /* Price tags */
-        .price-tag {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #d35400;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-        }
-        
-        /* 🚨 MAGIC CSS: Target Streamlit's native popover and make it float! */
-        div[data-testid="stPopover"] {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 9999;
-        }
-        /* Style the button that opens the popover */
-        div[data-testid="stPopover"] > button {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            color: white;
-            border-radius: 50px;
-            padding: 15px 25px;
-            border: none;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            font-weight: bold;
-            font-size: 16px;
-            transition: transform 0.3s ease;
-        }
-        div[data-testid="stPopover"] > button:hover {
-            transform: translateY(-5px);
-            color: white;
-            border-color: transparent;
-        }
-    </style>
-    """, unsafe_allow_html=True)
+<style>
+/* Hide default Streamlit elements */
+header {visibility: hidden;}
+footer {visibility: hidden;}
+.stDeployButton {display:none;}
+
+/* Apply a luxury gradient background */
+.stApp {
+    background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+}
+
+/* Remove top padding */
+.block-container {
+    padding-top: 1rem;
+    padding-bottom: 0rem;
+}
+
+/* Style the tabs to look like a modern navigation bar */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+}
+.stTabs [data-baseweb="tab"] {
+    height: 50px;
+    border-radius: 8px;
+    padding: 0 25px;
+    background-color: transparent;
+    font-weight: 700;
+    color: #4a4a4a;
+    transition: all 0.3s ease;
+}
+.stTabs [aria-selected="true"] {
+    background-color: #2c3e50 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Price tags */
+.price-tag {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #d35400;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+/* 🚨 REFIXED MAGIC CSS: Forces the popover trigger button to be a tiny, floating circle */
+div[data-testid="stPopover"] {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 99999;
+}
+
+/* Style the button container to maintain alignment */
+div[data-testid="stPopover"] > div:first-child {
+    display: block !important;
+}
+
+/* Target the exact inner button element */
+div[data-testid="stPopover"] button {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%) !important;
+    color: white !important;
+    border-radius: 50% !important; /* Makes it a circle */
+    width: 60px !important;       /* Explicit compact size */
+    height: 60px !important;      /* Explicit compact size */
+    padding: 0 !important;         /* Reset padding */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3) !important;
+    font-size: 24px !important;   /* Increase emoji size inside */
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+div[data-testid="stPopover"] button:hover {
+    transform: translateY(-5px) scale(1.05) !important;
+    box-shadow: 0 12px 20px rgba(0,0,0,0.4) !important;
+}
+
+/* Adjust position of the opened overlay window to match the button */
+div[data-testid="stPopoverWindow"] {
+    bottom: 100px !important;
+    right: 30px !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # --- 4. PSEUDO-NAVBAR / BRANDING ---
 col1, col2 = st.columns([1, 5])
@@ -152,11 +168,11 @@ if "chat_history" not in st.session_state:
         {"role": "assistant", "content": "Hi! I am the LuxeStay AI. How can I assist you with pricing or bookings today?"}
     ]
 
-# This popover button will be forced to the bottom right by the CSS above
-with st.popover("💬 Chat with AI"):
+# Use only a single emoji character so it fits beautifully into the 60x60 circular button
+with st.popover("💬"):
     st.markdown("### 🤖 GenAI Concierge")
-    
     chat_container = st.container(height=350)
+    
     with chat_container:
         for message in st.session_state.chat_history:
             with st.chat_message(message["role"]):
@@ -169,14 +185,12 @@ with st.popover("💬 Chat with AI"):
         with col2:
             submitted = st.form_submit_button("Send", type="primary", use_container_width=True)
             
-    if submitted and user_input:
-        st.session_state.chat_history.append({"role": "user", "content": user_input})
-        
-        try:
-            response = model.generate_content(user_input)
-            bot_reply = response.text
-        except Exception as e:
-            bot_reply = f"API Error: Please check your configuration. Details: {e}"
-            
-        st.session_state.chat_history.append({"role": "assistant", "content": bot_reply})
-        st.rerun()
+        if submitted and user_input:
+            st.session_state.chat_history.append({"role": "user", "content": user_input})
+            try:
+                response = model.generate_content(user_input)
+                bot_reply = response.text
+            except Exception as e:
+                bot_reply = f"API Error: Please check your configuration. Details: {e}"
+            st.session_state.chat_history.append({"role": "assistant", "content": bot_reply})
+            st.rerun()
