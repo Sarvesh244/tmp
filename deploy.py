@@ -71,12 +71,57 @@ footer {visibility: hidden;}
 }
 
 /* 🚨 REFIXED MAGIC CSS: Forces the popover trigger button to be a tiny, floating circle */
+/* 🚨 FIXED FLOATING POPOVER: Anchors the chat button precisely at the bottom right */
 div[data-testid="stPopover"] {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 99999;
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    left: auto !important; /* Prevents stretching to the left on narrow screens */
+    top: auto !important;
+    z-index: 999999 !important;
+    width: auto !important;
 }
+
+/* Ensure container doesn't block page clicks or stretch layout */
+div[data-testid="stPopover"] > div:first-child {
+    display: inline-flex !important;
+    justify-content: flex-end !important;
+}
+
+/* Target the exact inner button element to force a small circular shape */
+div[data-testid="stPopover"] button {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%) !important;
+    color: white !important;
+    border-radius: 50% !important; 
+    width: 60px !important;       
+    height: 60px !important;      
+    min-width: 60px !important;   /* Prevents distortion */
+    max-width: 60px !important;   
+    padding: 0 !important;         
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3) !important;
+    font-size: 24px !important;   
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+div[data-testid="stPopover"] button:hover {
+    transform: translateY(-5px) scale(1.05) !important;
+    box-shadow: 0 12px 20px rgba(0,0,0,0.4) !important;
+}
+
+/* Forces the chat text window to open aligned neatly right over the button */
+div[data-testid="stPopoverWindow"] {
+    position: fixed !important;
+    bottom: 100px !important;
+    right: 30px !important;
+    left: auto !important;
+    top: auto !important;
+    max-width: 350px !important;
+}
+
 
 /* Style the button container to maintain alignment */
 div[data-testid="stPopover"] > div:first-child {
